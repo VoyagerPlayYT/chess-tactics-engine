@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CHESS TACTICS // MINIMAX AI ENGINE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <!-- Header Bar -->
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-badge">GRANDMASTER</div>
+      <span class="brand-title">CHESS TACTICS ENGINE</span>
+      <span class="brand-sub">MINIMAX ALPHA-BETA // FIDE RULES</span>
+    </div>
+    <div class="metrics-bar">
+      <div class="metric-item">
+        <span class="label">ENGINE</span>
+        <span class="value font-mono text-gold" id="engineStatus">MINIMAX D3</span>
+      </div>
+      <div class="metric-item">
+        <span class="label">EVAL</span>
+        <span class="value font-mono" id="evalDisplay">+0.00 CP</span>
+      </div>
+      <div class="metric-item">
+        <span class="label">DATABASE</span>
+        <span class="value">SQLITE ARCHIVE</span>
+      </div>
+      <div class="metric-item">
+        <span class="label">PORT</span>
+        <span class="value font-mono">8013</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Workspace -->
+  <main class="workspace">
+    <!-- Left Panel: Mode & Game Control -->
+    <aside class="panel side-panel">
+      <div class="panel-header">
+        <span class="panel-title">CONTROL & NOTATION</span>
+        <span class="panel-tag" id="turnIndicator">WHITE TO MOVE</span>
+      </div>
+
+      <!-- Mode Selector -->
+      <div class="mode-tabs">
+        <button class="mode-tab active" data-mode="ai">VS AI BOT</button>
+        <button class="mode-tab" data-mode="puzzle">PUZZLES</button>
+        <button class="mode-tab" data-mode="multi">LAN ROOM</button>
+      </div>
+
+      <!-- AI Settings Box -->
+      <div class="settings-box" id="aiSettings">
+        <div class="box-title">AI ENGINE PARAMETERS</div>
+        <div class="setting-row">
+          <span>AI Difficulty:</span>
+          <select id="aiDifficulty" class="cyber-select">
+            <option value="1">Level 1: Casual (Depth 1)</option>
+            <option value="2" selected>Level 2: Tactical (Depth 2)</option>
+            <option value="3">Level 3: Master (Depth 3 Alpha-Beta)</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <span>Player Color:</span>
+          <select id="playerColor" class="cyber-select">
+            <option value="w" selected>White (First Move)</option>
+            <option value="b">Black (Second Move)</option>
+          </select>
+        </div>
+        <button class="btn btn-gold" id="btnNewGame">NEW GAME</button>
+      </div>
+
+      <!-- Puzzle Box (hidden by default) -->
+      <div class="settings-box hidden" id="puzzleSettings">
+        <div class="box-title">TACTICAL PUZZLES (SQLITE)</div>
+        <div class="puzzle-info">
+          <div id="puzzleTheme" class="font-mono text-gold">Theme: Mate in 1</div>
+          <div id="puzzleRating" class="font-mono text-sm">Rating: 800</div>
+        </div>
+        <div class="puzzle-status font-mono" id="puzzleStatus">Find the winning tactical move!</div>
+        <button class="btn btn-gold" id="btnNextPuzzle">NEXT PUZZLE</button>
+      </div>
+
+      <!-- LAN Room Box (hidden by default) -->
+      <div class="settings-box hidden" id="multiSettings">
+        <div class="box-title">LAN WEBSOCKET ROOM</div>
+        <div class="setting-row">
+          <input type="text" id="roomCodeInput" value="ROOM-01" class="cyber-input">
+          <button class="btn btn-gold" id="btnJoinRoom">JOIN ROOM</button>
+        </div>
+        <div class="room-status font-mono text-sm" id="roomStatus">Disconnected</div>
+      </div>
+
+      <!-- Clocks -->
+      <div class="clocks-container">
+        <div class="clock-card" id="blackClockCard">
+          <span class="clock-label">BLACK (AI)</span>
+          <span class="clock-time font-mono" id="blackClock">03:00</span>
+        </div>
+        <div class="clock-card active" id="whiteClockCard">
+          <span class="clock-label">WHITE (YOU)</span>
+          <span class="clock-time font-mono" id="whiteClock">03:00</span>
+        </div>
+      </div>
+
+      <!-- Move History PGN Table -->
+      <div class="history-section">
+        <div class="box-title">MOVE HISTORY (PGN NOTATION)</div>
+        <div class="pgn-scroll">
+          <table class="pgn-table" id="pgnTable">
+            <thead>
+              <tr><th>#</th><th>WHITE</th><th>BLACK</th></tr>
+            </thead>
+            <tbody id="pgnBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Match Archive Actions -->
+      <div class="archive-actions">
+        <button class="btn" id="btnSaveMatch">SAVE MATCH PGN (SQLITE)</button>
+      </div>
+    </aside>
+
+    <!-- Center Viewport: Chess Board & Eval Bar -->
+    <section class="viewport-container">
+      <div class="board-wrapper">
+        <!-- Vertical Evaluation Bar -->
+        <div class="eval-bar-track">
+          <div class="eval-bar-fill" id="evalBarFill" style="height: 50%;"></div>
+        </div>
+
+        <!-- 8x8 Chessboard Container -->
+        <div class="board-frame">
+          <div class="chessboard" id="chessboard">
+            <!-- 64 squares generated via JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/chess_app.js"></script>
+</body>
+</html>
